@@ -30,10 +30,10 @@ jobs:
           mkdir -p _site/assets/images _site/assets/documents
           cp index.html styles.css script.js _site/
           touch _site/.nojekyll
-          curl -L --fail --retry 3 -o _site/assets/images/katarzyna-bilicka.jpg \
-            "https://katarzynabilicka.weebly.com/uploads/1/0/3/5/103570280/nominee-headshot-201_orig.jpg"
-          curl -L --fail --retry 3 -o _site/assets/documents/katarzyna-bilicka-cv.pdf \
-            "https://katarzynabilicka.weebly.com/uploads/1/0/3/5/103570280/cv_february_2026.pdf"
+          base64 --decode assets/images/katarzyna-bilicka.jpg.base64 \
+            > _site/assets/images/katarzyna-bilicka.jpg
+          base64 --decode assets/documents/katarzyna-bilicka-cv.pdf.base64 \
+            > _site/assets/documents/katarzyna-bilicka-cv.pdf
           curl -L --fail --retry 3 -o _site/assets/documents/tax-policy-investment-profit-shifting.pdf \
             "https://katarzynabilicka.weebly.com/uploads/1/0/3/5/103570280/bilicka_devereux_guceri_oct2025.pdf"
           curl -L --fail --retry 3 -o _site/assets/documents/corporate-taxable-income-elasticity.pdf \
