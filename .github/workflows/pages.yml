@@ -1,0 +1,60 @@
+name: Deploy website
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Prepare site
+        run: |
+          mkdir -p _site/assets/images _site/assets/documents
+          cp index.html styles.css script.js _site/
+          touch _site/.nojekyll
+          curl -L --fail --retry 3 -o _site/assets/images/katarzyna-bilicka.jpg \
+            "https://katarzynabilicka.weebly.com/uploads/1/0/3/5/103570280/nominee-headshot-201_orig.jpg"
+          curl -L --fail --retry 3 -o _site/assets/documents/katarzyna-bilicka-cv.pdf \
+            "https://katarzynabilicka.weebly.com/uploads/1/0/3/5/103570280/cv_february_2026.pdf"
+          curl -L --fail --retry 3 -o _site/assets/documents/tax-policy-investment-profit-shifting.pdf \
+            "https://katarzynabilicka.weebly.com/uploads/1/0/3/5/103570280/bilicka_devereux_guceri_oct2025.pdf"
+          curl -L --fail --retry 3 -o _site/assets/documents/corporate-taxable-income-elasticity.pdf \
+            "https://katarzynabilicka.weebly.com/uploads/1/0/3/5/103570280/corporate_eti.pdf"
+          curl -L --fail --retry 3 -o _site/assets/documents/leak-in-paradise.pdf \
+            "https://katarzynabilicka.weebly.com/uploads/1/0/3/5/103570280/full_manuscript.pdf"
+          curl -L --fail --retry 3 -o _site/assets/documents/measuring-firm-activity-outer-space.pdf \
+            "https://katarzynabilicka.weebly.com/uploads/1/0/3/5/103570280/bilicka_seidel.pdf"
+          curl -L --fail --retry 3 -o _site/assets/documents/financing-constraints-online-appendix.pdf \
+            "https://katarzynabilicka.weebly.com/uploads/1/0/3/5/103570280/online_appendix_inv.pdf"
+          curl -L --fail --retry 3 -o _site/assets/documents/profit-shifting-corruption.pdf \
+            "https://katarzynabilicka.weebly.com/uploads/1/0/3/5/103570280/bilicka_seidel_2019_01_29.pdf"
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
